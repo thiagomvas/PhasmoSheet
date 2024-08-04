@@ -1,0 +1,30 @@
+﻿@page "/"
+@using PhasmoSheet.Core.Common
+@using PhasmoSheet.Core.Ghosts
+
+<PageTitle>Home</PageTitle>
+
+<div class="ghost-grid">
+    @foreach (var ghost in ghosts)
+    {
+        <GhostView Ghost="@ghost" />
+    }
+</div>
+
+@code {
+    private List<Ghost> ghosts = new List<Ghost>
+    {
+        new Obake(),
+        new Spirit(),
+    };
+    private List<Evidence> evidences = [Evidence.Ultraviolet, Evidence.EMF5];
+}
+<style>
+    .ghost-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
+        gap: 16px; /* Adjust gap between items as needed */
+    }
+
+
+</style>

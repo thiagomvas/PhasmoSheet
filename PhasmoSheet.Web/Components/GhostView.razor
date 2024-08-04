@@ -1,0 +1,122 @@
+﻿@using PhasmoSheet.Core.Ghosts
+@using PhasmoSheet.Core.Common
+@using System.ComponentModel
+
+@code {
+    [Parameter]
+    public Ghost Ghost { get; set; }
+
+    [Inject]
+    private GlobalState State { get; set; }
+
+    int confirmation = 0;
+    private string GetCardColor()
+    {
+        switch(confirmation)
+        {
+            case 0:
+                return "#0f0f0f";
+            case 1:
+                return Colors.Green.Darken4;
+            case 2:
+                return Colors.Red.Darken4;
+            default:
+                return "#0f0f0f";
+        }
+    }
+
+
+    private void OnStateChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(State.ConfirmedEvidences) || e.PropertyName == nameof(State.RuledOutEvidences))
+        {
+            StateHasChanged(); // Refresh the component
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        State.PropertyChanged += OnStateChanged;
+    }
+
+    public void Dispose()
+    {
+        State.PropertyChanged -= OnStateChanged;
+    }
+}
+
+<MudCard Style=@($"background-color: {GetCardColor()}; color: white; height: 256px; display: flex;")>
+    <!-- Main Content Area -->
+    <div Style="flex: 1; display: flex; flex-direction: column;">
+        <MudCardHeader Style="height: fit-content;">
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">@Ghost.Name</MudText>
+            </CardHeaderContent>
+            <CardHeaderActions>
+                <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="@(() => confirmation = confirmation != 1 ? 1 : 0)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Error" OnClick="@(() => confirmation = confirmation != 2 ? 2 : 0)" />
+
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent Style="display: flex; flex: 1; overflow: hidden;">
+            <!-- Left Half -->
+            <div Style="flex: 1; padding: 0px 16px 0px 16px;">
+                <MudCardActions>
+                    @foreach (var evidence in Ghost.Evidences)
+                    {
+                        <MudChip T="string"
+                                 Variant="@(evidence == Ghost.GuaranteedEvidence ? Variant.Filled : Variant.Outlined)"
+                                 Color="@(State.ConfirmedEvidences.Contains(evidence) ? Color.Success : Color.Error)">
+                            @Format.Evidence(evidence)
+                        </MudChip>
+                    }
+                </MudCardActions>
+                <MudText>@($"{Ghost.MinSanityPercentage}%")</MudText>
+                <MudText Typo="Typo.body2">@($"{Ghost.DefaultFootstepSpeed}m/s")</MudText>
+                @if (Ghost.LOSFootstepSpeed > 0)
+                {
+                    <MudText Typo="Typo.body2">@($"{Ghost.LOSFootstepSpeed}m/s")</MudText>
+                }
+            </div>
+            <!-- Right Half (Scrollable Text Block) -->
+            <div Style="flex: 1; padding: 16px; overflow-y: auto;">
+                <MudText Typo="Typo.body2">
+                    @if (Ghost.Tells.Length > 0)
+                    {
+                        <h3>Tells</h3>
+                        @foreach (var ability in Ghost.Tells)
+                        {
+                            <div>• @ability</div>
+                        }
+                    }
+                    @if (Ghost.RuleOuts.Length > 0)
+                    {
+                        <h3>Rule Outs</h3>
+                        @foreach (var ability in Ghost.RuleOuts)
+                        {
+                            <div>• @ability</div>
+                        }
+                    }
+                    @if (Ghost.ConfirmationTests.Length > 0)
+                    {
+                        <h3>Confirmation Tests</h3>
+                        @foreach (var ability in Ghost.ConfirmationTests)
+                        {
+                            <div>• @ability</div>
+                        }
+                    }
+                    @if (Ghost.Abilities.Length > 0)
+                    {
+                        <h3>Special Abilities</h3>
+                        @foreach (var ability in Ghost.Abilities)
+                        {
+                            <div>• @ability</div>
+                        }
+                    }
+                </MudText>
+            </div>
+        </MudCardContent>
+    </div>
+</MudCard>
+
+
