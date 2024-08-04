@@ -27,6 +27,12 @@
             StateHasChanged(); // Refresh the component
         }
     }
+
+    private string SpeedToFile(double speed)
+    {
+        return speed.ToString().Replace('.', '_') + "ms";
+    }
+
     private async Task PlayBansheeSound()
     {
         await JS.InvokeVoidAsync("toggleAudio", "banshee");
@@ -52,7 +58,12 @@
 @if(Ghost.GetType() == typeof(Deogen))
 {
     <audio id="deogen" src="Sounds/deogenbreath.mp3" preload="auto"></audio>    
+}
+<audio id="@SpeedToFile(Ghost.DefaultFootstepSpeed)" src="@($"Sounds/{SpeedToFile(Ghost.DefaultFootstepSpeed)}.mp3")" preload="auto"></audio>
 
+@foreach(var speed in Ghost.ConditionalFootstepSpeed)
+{
+    <audio id="@SpeedToFile(speed)" src="@($"Sounds/{SpeedToFile(speed)}.mp3")" preload="auto"></audio>
 }
 
 <MudCard Style=@($"background-color: {GetCardColor()}; color: white; height: 256px; display: flex; flex-direction: column;")>
@@ -104,7 +115,7 @@
                 </div>
                 <br />
                 <div style="display: flex; align-items: center;">
-                    <img src="Icons/footstep.svg" alt="Icon" style="margin-right: 10px; width: 24px; height: 24px; filter: brightness(0) invert(1);">
+                        <img src="Icons/footstep.svg"  alt="Icon" style="margin-right: 10px; width: 24px; height: 24px; filter: brightness(0) invert(1);">
                     @if(Ghost.HasStandardLOSAccel)
                     {
                         <MudTooltip Text="Has stantard LOS acceleration">
@@ -116,7 +127,17 @@
                             <img src="Icons/eyecrossed.svg" alt="Icon" style="margin-right: 10px; width: 24px; height: 24px; filter: brightness(0) invert(1);">
                         </MudTooltip>
                     }
-                    <div style="display: flex; justify-content: left; flex: 1;">@Ghost.DefaultFootstepSpeed m/s <span style="color: darkgray"> @Ghost.FormatAdditionalSpeeds()</span></div>
+                    <div style="display: flex; justify-content: left; flex: 1;">
+                        <MudButton OnClick="@(async() => await JS.InvokeVoidAsync("toggleAudio", SpeedToFile(Ghost.DefaultFootstepSpeed)))" Variant="Variant.Filled" Color="Color.Info" Size="Size.Small">
+                            @Ghost.DefaultFootstepSpeed m/s
+                        </MudButton>
+                        @foreach(var speed in Ghost.ConditionalFootstepSpeed)
+                        {
+                            <MudButton OnClick="@(async() => await JS.InvokeVoidAsync("toggleAudio", SpeedToFile(speed)))" Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small">
+                                @speed m/s
+                            </MudButton>
+                        }
+                        </div>
                 </div>
             </div>
             <!-- Right Half (Scrollable Text Block) -->

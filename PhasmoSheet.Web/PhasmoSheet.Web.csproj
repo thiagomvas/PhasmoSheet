@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Icons\" />
-    <Folder Include="wwwroot\Sounds\" />
   </ItemGroup>
 
 </Project>
