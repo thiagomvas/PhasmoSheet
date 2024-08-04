@@ -4,14 +4,16 @@
 @using System.ComponentModel
 @inject GlobalState State
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Phasmosheet</PageTitle>
 
-<div class="ghost-grid">
+<MudGrid>
     @foreach (var ghost in filtered)
     {
-        <GhostView Ghost="@ghost" />
+        <MudItem xs="6">
+            <GhostView Ghost="@ghost" />
+        </MudItem>
     }
-</div>
+</MudGrid>
 
 @code {
     private List<Ghost> filtered;

@@ -41,20 +41,24 @@ namespace PhasmoSheet.Core.Ghosts
         public string FormatConditionalSanities()
         {
             var result = "";
+            if (ConditionalSanityPercentages.Length > 0)
+                result += " | ";
             foreach (var sanity in ConditionalSanityPercentages)
             {
                 result += $"{sanity}%, ";
             }
-            return result.TrimEnd(',', ' ');
+            return result.TrimEnd(',');
         }
         public string FormatAdditionalSpeeds()
         {
             var result = "";
+            if (ConditionalFootstepSpeed.Length > 0)
+                result += " | ";
             foreach(var speed in ConditionalFootstepSpeed)
             {
                 result += $"{speed} m/s, ";
             }
-            return result.TrimEnd(',', ' ');
+            return result.TrimEnd(',');
         }
         public static List<Ghost> GetAll()
         {

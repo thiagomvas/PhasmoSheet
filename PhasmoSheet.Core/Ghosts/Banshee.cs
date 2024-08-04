@@ -9,6 +9,7 @@ namespace PhasmoSheet.Core.Ghosts
             Name = "Banshee";
             Evidences = new[] { Evidence.Ultraviolet, Evidence.GhostOrb, Evidence.DOTSProjector };
             MinSanityPercentage = 50;
+            ConditionalSanityPercentages = [12, 87];
             Tells =
             [
                 new("Unique scream in Parabolic Microphone", Usefulness.Important),

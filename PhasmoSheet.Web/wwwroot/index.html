@@ -29,6 +29,20 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script>
+        function toggleAudio(audioId) {
+            var audioElement = document.getElementById(audioId);
+            if (audioElement) {
+                if (audioElement.paused) {
+                    // Play the audio if it's paused
+                    audioElement.play();
+                } else {
+                    // Pause the audio if it's playing
+                    audioElement.pause();
+                }
+            }
+        }
+    </script>
 
 </body>
 
