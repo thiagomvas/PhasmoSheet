@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "PhasmoSheet.Web",
   "resources": {
-    "hash": "sha256-8oeXhzfw+PY3FAi5FYegJZ8+Uwq35jXgN2BPIe8l6JQ=",
+    "hash": "sha256-nKxOglslK8H2QOtjnE2PnOsXRN9+kJoXkIZqCFWP4Aw=",
     "jsModuleNative": {
       "dotnet.native.8.0.7.n56cnbpseo.js": "sha256-7mUf77X9kA8XQSanKrMFFP42Cd+qNdOCGHeI1c5JxXo="
     },
@@ -34,8 +34,8 @@
       "Microsoft.JSInterop.wasm": "sha256-Zf9aEUyIbFr0zhEm1l0Qegf0X6syx4UnSYhzv0lI5SA=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-nJo9AftA2/mHxtXapqHsgjzQgIHOpue2DnVtxkgTSME=",
       "MudBlazor.wasm": "sha256-Cw86y42jOpi0imd3SjQFZlE93i4W2HvFK5nkIEOezP0=",
-      "PhasmoSheet.Core.wasm": "sha256-yeI4bpM1bXz59LSe8sthYUHjlnn4IenafQCtwmob6jY=",
-      "PhasmoSheet.Web.wasm": "sha256-BlKHmPh5Gt7jL+3U02ptKvHHob00PFKfjDtAQBVDk0Y=",
+      "PhasmoSheet.Core.wasm": "sha256-SErwAH0NqLkbNhpaM495MmTCCUXeLfsACpzT1CVKSHU=",
+      "PhasmoSheet.Web.wasm": "sha256-cOH3NEpjXdST0/jX/gWUqFUuTVDJG6cShMLg9+KQGC4=",
       "System.Collections.Concurrent.wasm": "sha256-Leoy0Ey+2FiMnXIgBicwSXVtjDQBR67PSlSueib3yc0=",
       "System.Collections.Immutable.wasm": "sha256-9U87tGciQ1J3fJN4AI6TXHOgHF84k9OhqGE3rBYVcXQ=",
       "System.Collections.wasm": "sha256-DzwawVRqgJEQerka4wxYhmgP/Wq8NPdiw8uSylQkJ8g=",

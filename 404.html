@@ -120,6 +120,12 @@
     <script src="_framework/blazor.webassembly.js" autostart="false"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script>
+        let footstepSfx = new Audio("Sounds/footstep.mp3");
+
+        function playStepSound() {
+            footstepSfx.play();
+        }
+
         function toggleAudio(audioId) {
             var audioElement = document.getElementById(audioId);
             if (audioElement) {
