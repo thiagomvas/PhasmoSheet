@@ -14,12 +14,102 @@
 </head>
 
 <body>
+
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-orb {
+            width: 1px; /* Adjust as needed */
+            height: 1px; /* Adjust as needed */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            transform-origin: top left;
+        }
+
+            .loading-orb.orb1 {
+                background-color: #000; /* Red */
+                animation: orbit 4s linear infinite;
+                animation-delay: -1s;
+                box-shadow: 0 0 100px 60px #4cc9f0;
+            }
+
+            .loading-orb.orb2 {
+                background-color: #000; /* Red */
+                animation: orbit 5s linear infinite;
+                animation-delay: -3s;
+                box-shadow: 0 0 100px 60px #4361ee;
+                animation-direction: reverse;
+            }
+
+            .loading-orb.orb3 {
+                background-color: #000; /* Red */
+                animation: orbit 6s linear infinite;
+                animation-delay: -2s;
+                box-shadow: 0 0 100px 60px #3a0ca3;
+            }
+
+            .loading-orb.orb4 {
+                background-color: #000; /* Red */
+                animation: orbit 7s linear infinite;
+                animation-delay: -5s;
+                box-shadow: 0 0 100px 60px #7209b7;
+            }
+
+            .loading-orb.orb5 {
+                background-color: #000; /* Red */
+                animation: orbit 5s linear infinite;
+                animation-delay: -1s;
+                box-shadow: 0 0 100px 60px #f72585;
+                animation-direction: reverse;
+            }
+
+        .loading-center-text {
+            position: absolute;
+            height: fit-content;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @keyframes orbit {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) translate(100px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) translate(100px) rotate(-360deg);
+            }
+        }
+
+        .loading-message {
+            z-index: 1;
+        }
+    </style>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <div class="loading-container">
+            <div class="loading-orb orb1"></div>
+            <div class="loading-orb orb2"></div>
+            <div class="loading-orb orb3"></div>
+            <div class="loading-orb orb4"></div>
+            <div class="loading-orb orb5"></div>
+            <div class="loading-message">
+                <div class="loading-animation"></div>
+                <p id="loadingMessage"></p>
+            </div>
+        </div>
     </div>
 
     <div id="blazor-error-ui">
