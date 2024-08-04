@@ -13,20 +13,47 @@
 <MudSnackbarProvider />
 
 <div class="container">
-    <aside class="sidebar" style="border-right: 1px solid @Colors.Purple.Default dashed;">
-        <MudText Typo="Typo.h5">Evidence</MudText>
-        @foreach(var evidence in evidences)
-        {
+    <aside class="sidebar" style="border-right: 1px solid #ff0000 dashed;">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 100%;" OnClick="@(() => state.Reset())">
+            Reset
+        </MudButton>
+        <MudText Typo="Typo.h5">
+            Evidence
+            <MudIconButton OnClick="ToggleEvidence" Icon="@(evidenceCollapsed ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ExpandLess)" />
+        </MudText>
+        <MudCollapse Expanded="!evidenceCollapsed">
+            @foreach (var evidence in evidences)
+            {
+                <MudButton Variant="Variant.Filled"
+                           OnClick="@(() => state.ToggleEvidence(evidence))"
+                           Color="@(state.GetEvidenceButtonColor(evidence))"
+                           Class="icon-text-button"
+                Style="width: 100%;">
+                    <MudIcon Icon="@state.GetEvidenceIconButton(evidence)" />
+                    <span class="icon-text">@Format.Evidence(evidence)</span>
+                </MudButton>
+                <div></div>
+            }
+        </MudCollapse>
 
-            <MudButton Variant="Variant.Filled"
-                       OnClick="@(() => state.ToggleEvidence(evidence))"
-                       Color="@(state.GetEvidenceButtonColor(evidence))"
-                       Class="icon-text-button">
-                <MudIcon Icon="@state.GetEvidenceIconButton(evidence)" />
-                <span class="icon-text">@Format.Evidence(evidence)</span>
-            </MudButton>
-            <div></div>
-        }
+        <MudText Typo="Typo.h5">
+            Events
+            <MudIconButton OnClick="ToggleEvent" Icon="@(eventCollapsed ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ExpandLess)" />
+            </MudText>
+            <MudCollapse Expanded="!eventCollapsed">
+                @foreach (var ghostEvent in events)
+                {
+                    <MudButton Variant="Variant.Filled"
+                               OnClick="@(() => state.ToggleEvent(ghostEvent))"
+                           Color="@(state.GetGhostEventButtonColor(ghostEvent))"
+                               Class="icon-text-button"
+                               Style="width: 100%;">
+                    <MudIcon Icon="@state.GetGhostEventIconButton(ghostEvent)" />
+                        <span class="icon-text">@Format.GhostEvent(ghostEvent)</span>
+                    </MudButton>
+                    <div></div>
+                }
+                </MudCollapse>
     </aside>
     <main class="content">
         @Body
@@ -51,7 +78,9 @@
         display: flex;
         flex-direction: column;
         position: fixed;
-        height: 100vh;
+        height: 100vh; /* Full viewport height */
+        overflow-y: auto; /* Enable vertical scrolling */
+        transition: width 0.3s;
     }
 
         .sidebar button {
@@ -84,10 +113,29 @@
         margin-left: 8px; /* Adjust the spacing as needed */
     }
 
+
 </style>
 
 @code {
-    private string currentState;
+    private bool evidenceCollapsed = false;
+    private bool eventCollapsed = true;
+
+    protected override void OnInitialized()
+    {
+        events = Enum.GetValues(typeof(GhostEvents)).Cast<GhostEvents>().OrderBy(e => e.ToString()).ToArray();
+    }
+
+    private void ToggleEvidence()
+    {
+        evidenceCollapsed = !evidenceCollapsed;
+        StateHasChanged();
+    }
+
+    private void ToggleEvent()
+    {
+        eventCollapsed = !eventCollapsed;
+        StateHasChanged();
+    }
 
     private Evidence[] evidences = new Evidence[]
     {
@@ -100,9 +148,8 @@
         Evidence.DOTSProjector
     };
 
-    private void ChangeState(string state)
+    private GhostEvents[] events = new GhostEvents[]
     {
-        currentState = state;
-        StateHasChanged();
-    }
+        
+    };
 }

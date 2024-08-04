@@ -16,4 +16,8 @@
     <ProjectReference Include="..\PhasmoSheet.Core\PhasmoSheet.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Icons\" />
+  </ItemGroup>
+
 </Project>

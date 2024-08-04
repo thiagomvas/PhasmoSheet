@@ -9,20 +9,14 @@
     [Inject]
     private GlobalState State { get; set; }
 
-    int confirmation = 0;
     private string GetCardColor()
     {
-        switch(confirmation)
-        {
-            case 0:
-                return "#0f0f0f";
-            case 1:
-                return Colors.Green.Darken4;
-            case 2:
-                return Colors.Red.Darken4;
-            default:
-                return "#0f0f0f";
-        }
+        if (State.CorrectGhosts.Contains(Ghost))
+            return Colors.Green.Darken4;
+        if (State.RuledOutGhosts.Contains(Ghost))
+            return Colors.Red.Darken4;
+        return "#0f0f0f";
+
     }
 
 
@@ -44,23 +38,24 @@
         State.PropertyChanged -= OnStateChanged;
     }
 }
-
-<MudCard Style=@($"background-color: {GetCardColor()}; color: white; height: 256px; display: flex;")>
+<MudCard Style=@($"background-color: {GetCardColor()}; color: white; height: 256px; display: flex; flex-direction: column;")>
     <!-- Main Content Area -->
-    <div Style="flex: 1; display: flex; flex-direction: column;">
+    <div Style="display: flex; flex-direction: column; flex: 1;">
         <MudCardHeader Style="height: fit-content;">
             <CardHeaderContent>
                 <MudText Typo="Typo.h6">@Ghost.Name</MudText>
             </CardHeaderContent>
             <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="@(() => confirmation = confirmation != 1 ? 1 : 0)" />
-                <MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Error" OnClick="@(() => confirmation = confirmation != 2 ? 2 : 0)" />
-
+                <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="@(() => State.ConfirmGhost(Ghost))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Error" OnClick="@(() => State.RuleOutGhost(Ghost))" />
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent Style="display: flex; flex: 1; overflow: hidden;">
             <!-- Left Half -->
             <div Style="flex: 1; padding: 0px 16px 0px 16px;">
+                <MudText Typo="Typo.h5">
+                    Evidences
+                </MudText>
                 <MudCardActions>
                     @foreach (var evidence in Ghost.Evidences)
                     {
@@ -71,15 +66,18 @@
                         </MudChip>
                     }
                 </MudCardActions>
-                <MudText>@($"{Ghost.MinSanityPercentage}%")</MudText>
-                <MudText Typo="Typo.body2">@($"{Ghost.DefaultFootstepSpeed}m/s")</MudText>
-                @if (Ghost.LOSFootstepSpeed > 0)
-                {
-                    <MudText Typo="Typo.body2">@($"{Ghost.LOSFootstepSpeed}m/s")</MudText>
-                }
+                <div style="display: flex; align-items: center;">
+                    <img src="Icons/brain.svg" alt="Icon" style="margin-right: 10px; width: 24px; height: 24px; filter: brightness(0) invert(1);">
+                    <div style="display: flex; justify-content: left; flex: 1;">@Ghost.MinSanityPercentage% @Ghost.FormatConditionalSanities()</div>
+                </div>
+                <br />
+                <div style="display: flex; align-items: center;">
+                    <img src="Icons/footstep.svg" alt="Icon" style="margin-right: 10px; width: 24px; height: 24px; filter: brightness(0) invert(1);">
+                    <div style="display: flex; justify-content: left; flex: 1;">@Ghost.DefaultFootstepSpeed m/s @Ghost.FormatAdditionalSpeeds()</div>
+                </div>
             </div>
             <!-- Right Half (Scrollable Text Block) -->
-            <div Style="flex: 1; padding: 16px; overflow-y: auto;">
+            <div Style="flex: 1; padding: 16px; overflow-y: auto; max-height: 128px;">
                 <MudText Typo="Typo.body2">
                     @if (Ghost.Tells.Length > 0)
                     {
@@ -118,5 +116,7 @@
         </MudCardContent>
     </div>
 </MudCard>
+
+
 
 

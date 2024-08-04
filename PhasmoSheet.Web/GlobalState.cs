@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using MudBlazor;
 using PhasmoSheet.Core.Common;
+using PhasmoSheet.Core.Ghosts;
 
 namespace PhasmoSheet.Web
 {
@@ -9,6 +10,29 @@ namespace PhasmoSheet.Web
     {
         private List<Evidence> _confirmedEvidences = new List<Evidence>();
         private List<Evidence> _ruledOutEvidences = new List<Evidence>();
+        private List<GhostEvents> _confirmedEvents = new();
+        private List<Ghost> correctGhosts = new();
+        private List<Ghost> ruledOutGhosts = new();
+
+        public List<Ghost> CorrectGhosts
+        {
+            get => correctGhosts;
+            set
+            {
+                correctGhosts = value;
+                OnPropertyChanged(nameof(CorrectGhosts));
+            }
+        }
+
+        public List<Ghost> RuledOutGhosts
+        {
+            get => ruledOutGhosts;
+            set
+            {
+                ruledOutGhosts = value;
+                OnPropertyChanged(nameof(RuledOutGhosts));
+            }
+        }
 
         public List<Evidence> ConfirmedEvidences
         {
@@ -27,6 +51,16 @@ namespace PhasmoSheet.Web
             {
                 _ruledOutEvidences = value;
                 OnPropertyChanged(nameof(RuledOutEvidences));
+            }
+        }
+
+        public List<GhostEvents> ConfirmedEvents
+        {
+            get => _confirmedEvents;
+            set
+            {
+                _confirmedEvents = value;
+                OnPropertyChanged(nameof(ConfirmedEvents));
             }
         }
 
@@ -52,7 +86,14 @@ namespace PhasmoSheet.Web
                 return Icons.Material.Filled.QuestionMark;
             }
         }
-
+        public string GetGhostEventIconButton(GhostEvents ghostEvent)
+        {
+            return ConfirmedEvents.Contains(ghostEvent) ? Icons.Material.Filled.Check : Icons.Material.Filled.QuestionMark;
+        }
+        public Color GetGhostEventButtonColor(GhostEvents ghostEvent)
+        {
+            return ConfirmedEvents.Contains(ghostEvent) ? Color.Success : Color.Default;
+        }
         public Color GetEvidenceButtonColor(Evidence evidence)
         {
             if (ConfirmedEvidences.Contains(evidence))
@@ -67,6 +108,39 @@ namespace PhasmoSheet.Web
             {
                 return Color.Default;
             }
+        }
+
+        public void ToggleEvent(GhostEvents ghostEvent)
+        {
+            if (ConfirmedEvents.Contains(ghostEvent))
+            {
+                ConfirmedEvents.Remove(ghostEvent);
+            }
+            else
+            {
+                ConfirmedEvents.Add(ghostEvent);
+            }
+            OnPropertyChanged(nameof(ConfirmedEvents));
+        }
+
+        public void RuleOutGhost(Ghost ghost)
+        {
+            CorrectGhosts.Remove(ghost);
+
+            if (!RuledOutGhosts.Remove(ghost))
+                RuledOutGhosts.Add(ghost);
+
+            OnPropertyChanged(nameof(CorrectGhosts));
+        }
+
+        public void ConfirmGhost(Ghost ghost)
+        {
+            RuledOutGhosts.Remove(ghost);
+
+            if (!CorrectGhosts.Remove(ghost))
+                CorrectGhosts.Add(ghost);
+
+            OnPropertyChanged(nameof(RuledOutGhosts));
         }
 
         public void ToggleEvidence(Evidence evidence)
@@ -92,8 +166,14 @@ namespace PhasmoSheet.Web
         {
             ConfirmedEvidences.Clear();
             RuledOutEvidences.Clear();
+            ConfirmedEvents.Clear();
+            CorrectGhosts.Clear();
+            RuledOutGhosts.Clear();
             OnPropertyChanged(nameof(ConfirmedEvidences));
             OnPropertyChanged(nameof(RuledOutEvidences));
+            OnPropertyChanged(nameof(ConfirmedEvents));
+            OnPropertyChanged(nameof(CorrectGhosts));
+            OnPropertyChanged(nameof(RuledOutGhosts));
         }
     }
 }

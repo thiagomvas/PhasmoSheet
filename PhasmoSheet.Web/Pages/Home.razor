@@ -1,23 +1,62 @@
 ﻿@page "/"
-@using PhasmoSheet.Core.Common
 @using PhasmoSheet.Core.Ghosts
+@using PhasmoSheet.Core.Common
+@using System.ComponentModel
+@inject GlobalState State
 
 <PageTitle>Home</PageTitle>
 
 <div class="ghost-grid">
-    @foreach (var ghost in ghosts)
+    @foreach (var ghost in filtered)
     {
         <GhostView Ghost="@ghost" />
     }
 </div>
 
 @code {
-    private List<Ghost> ghosts = new List<Ghost>
+    private List<Ghost> filtered;
+    private List<Ghost> ghosts;
+
+    private void OnStateChanged(object? sender, PropertyChangedEventArgs e)
     {
-        new Obake(),
-        new Spirit(),
-    };
-    private List<Evidence> evidences = [Evidence.Ultraviolet, Evidence.EMF5];
+        StateHasChanged(); // Refresh the component
+        UpdateFilter();
+    }
+
+    protected override void OnInitialized()
+    {
+        State.PropertyChanged += OnStateChanged;
+        ghosts = Ghost.GetAll();
+        filtered = ghosts;
+    }
+
+    public void Dispose()
+    {
+        State.PropertyChanged -= OnStateChanged;
+    }
+
+
+    private void UpdateFilter()
+    {
+        Console.WriteLine($"Confirmed E: {string.Join(',', State.ConfirmedEvidences)}\nRuled Out E: {string.Join(',', State.RuledOutEvidences)}\nEvents: {string.Join(',', State.ConfirmedEvents)}");
+        filtered = ghosts
+            // Step 1: Filter ghosts that have all ConfirmedEvidences
+            .Where(g => !State.ConfirmedEvidences.Any() || State.ConfirmedEvidences.All(e => g.Evidences.Contains(e)))
+            .Where(g => !State.RuledOutEvidences.Any() || !State.RuledOutEvidences.Any(e => g.Evidences.Contains(e)))
+            .ToList();
+
+        if(State.ConfirmedEvents.Any())
+        {
+            // If any of the ghosts has a rule out event confirmed, remove them
+            filtered = filtered.Where(g => !g.RuleOutEvents.Any(e => State.ConfirmedEvents.Contains(e))).ToList();
+            // If any of the ghosts has an exclusive event confirmed, only display them
+            var exclusiveGhosts = filtered.Where(g => g.ExclusiveEvents.Any(e => State.ConfirmedEvents.Contains(e))).ToList();
+            if(exclusiveGhosts.Any())
+            {
+                filtered = exclusiveGhosts;
+            }
+        }
+    }
 }
 <style>
     .ghost-grid {
