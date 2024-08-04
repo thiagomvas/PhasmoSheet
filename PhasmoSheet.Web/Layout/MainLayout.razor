@@ -19,6 +19,20 @@
             Reset
         </MudButton>
         <MudText Typo="Typo.h5">
+            @state.Difficulty
+            <MudIconButton OnClick="() => difficultyCollapsed = !difficultyCollapsed" Icon="@(difficultyCollapsed ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ExpandLess)" />
+        </MudText>
+        <MudCollapse Expanded="!difficultyCollapsed">
+            @foreach(var difficulty in Enum.GetValues(typeof(Difficulty)).Cast<Difficulty>())
+            {
+                <MudButton Variant="Variant.Filled" OnClick="@(() => SetDifficulty(difficulty))" Style="width: 100%;" Color="@(state.Difficulty == difficulty ? Color.Primary : Color.Default)">
+                    @difficulty
+                </MudButton>
+            }
+        </MudCollapse>
+
+
+        <MudText Typo="Typo.h5">
             Evidence
             <MudIconButton OnClick="ToggleEvidence" Icon="@(evidenceCollapsed ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ExpandLess)" />
         </MudText>
@@ -30,7 +44,7 @@
                            Color="@(state.GetEvidenceButtonColor(evidence))"
                            Class="icon-text-button"
                            Disabled=@(!IsEnabled(evidence))
-                Style="width: 100%;">
+                           Style="width: 100%;">
                     <MudIcon Icon="@state.GetEvidenceIconButton(evidence)" />
                     <span class="icon-text">@Format.Evidence(evidence)</span>
                 </MudButton>
@@ -41,21 +55,21 @@
         <MudText Typo="Typo.h5">
             Events
             <MudIconButton OnClick="ToggleEvent" Icon="@(eventCollapsed ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ExpandLess)" />
-            </MudText>
-            <MudCollapse Expanded="!eventCollapsed">
-                @foreach (var ghostEvent in events)
-                {
-                    <MudButton Variant="Variant.Filled"
-                               OnClick="@(() => state.ToggleEvent(ghostEvent))"
+        </MudText>
+        <MudCollapse Expanded="!eventCollapsed">
+            @foreach (var ghostEvent in events)
+            {
+                <MudButton Variant="Variant.Filled"
+                           OnClick="@(() => state.ToggleEvent(ghostEvent))"
                            Color="@(state.GetGhostEventButtonColor(ghostEvent))"
-                               Class="icon-text-button"
-                               Style="width: 100%;">
+                           Class="icon-text-button"
+                           Style="width: 100%;">
                     <MudIcon Icon="@state.GetGhostEventIconButton(ghostEvent)" />
-                        <span class="icon-text">@Format.GhostEvent(ghostEvent)</span>
-                    </MudButton>
-                    <div></div>
-                }
-                </MudCollapse>
+                    <span class="icon-text">@Format.GhostEvent(ghostEvent)</span>
+                </MudButton>
+                <div></div>
+            }
+        </MudCollapse>
     </aside>
     <main class="content">
         @Body
@@ -115,12 +129,12 @@
         margin-left: 8px; /* Adjust the spacing as needed */
     }
 
-
 </style>
 
 @code {
     private bool evidenceCollapsed = false;
     private bool eventCollapsed = true;
+    private bool difficultyCollapsed = true;
     private TheMimic mimic = new TheMimic();
     private List<Ghost> allGhosts = Ghost.GetAll();
 
@@ -141,12 +155,18 @@
         StateHasChanged();
     }
 
+    private void SetDifficulty(Difficulty diff)
+    {
+        state.Difficulty = diff;
+        difficultyCollapsed = true;
+    }
+
     private bool IsEnabled(Evidence evidence)
     {
         var matchingGhosts = allGhosts.Where(g => state.ConfirmedEvidences.All(e => g.Evidences.Contains(e))).ToList();
         bool containsThisEvidence = matchingGhosts.Any(g => g.Evidences.Contains(evidence));
 
-        if(!containsThisEvidence)
+        if (!containsThisEvidence)
         {
             return false;
         }
@@ -159,9 +179,9 @@
         bool matchingAllMimicEvidences = state.ConfirmedEvidences.All(e => mimic.Evidences.Contains(e));
         bool containsMimicEvidence = mimic.Evidences.Contains(evidence);
 
-        if(!state.CanPickMoreEvidence)
+        if (!state.CanPickMoreEvidence)
         {
-            if(evidence == Evidence.GhostOrb)
+            if (evidence == Evidence.GhostOrb)
             {
                 return matchingAllMimicEvidences;
             }
@@ -183,6 +203,6 @@
 
     private GhostEvents[] events = new GhostEvents[]
     {
-        
+
     };
 }
