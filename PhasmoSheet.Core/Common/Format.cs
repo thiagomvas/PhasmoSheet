@@ -44,6 +44,8 @@
                 GhostEvents.ShowingUpAsShadowInSummoningCircle => "Showing up as shadow in summoning circle",
                 GhostEvents.TurnsOffBreakerFrequently => "Turns off breaker frequently",
                 GhostEvents.GhostIsVisibleInPhoto => "Ghost is visible in photo",
+                GhostEvents.FavoriteRoomChanged => "Favorite room changed",
+                GhostEvents.BreathingHeavilyAsSpiritBoxResponse => "Breathing heavily as spirit box response",
                 _ => e.ToString()
             };
 

@@ -24,6 +24,8 @@
         ExclusiveScreamInParamic,
         ClosingADoorQuickly,
         ShowingUpAsShadowInSummoningCircle,
-        TurnsOffBreakerFrequently
+        TurnsOffBreakerFrequently,
+        FavoriteRoomChanged,
+        BreathingHeavilyAsSpiritBoxResponse,
     }
 }

@@ -21,6 +21,23 @@ namespace PhasmoSheet.Core.Ghosts
         public GhostEvents[] RuleOutEvents { get; set; } = [];
         public GhostEvents[] ExclusiveEvents { get; set; } = [];
 
+        public Ghost()
+        {
+            Name = "";
+            Evidences = [];
+            GuaranteedEvidence = null;
+            MinSanityPercentage = 50;
+            ConditionalSanityPercentages = [];
+            DefaultFootstepSpeed = 1.7;
+            ConditionalFootstepSpeed = [];
+            HasStandardLOSAccel = true;
+            Tells = [];
+            ConfirmationTests = [];
+            Abilities = [];
+            ExclusiveEvents = [];
+            RuleOutEvents = [];
+        }
+
         public string FormatConditionalSanities()
         {
             var result = "";
