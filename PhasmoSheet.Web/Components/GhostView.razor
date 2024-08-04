@@ -31,6 +31,10 @@
     {
         await JS.InvokeVoidAsync("toggleAudio", "banshee");
     }
+    private async Task PlayDeogenSound()
+    {
+        await JS.InvokeVoidAsync("toggleAudio", "deogen");
+    }
     protected override void OnInitialized()
     {
         State.PropertyChanged += OnStateChanged;
@@ -43,8 +47,12 @@
 }
 @if(Ghost.GetType() == typeof(Banshee))
 {
-    
-<audio id="banshee" src="Sounds/bansheescream.mp3" preload="auto"></audio>    
+    <audio id="banshee" src="Sounds/bansheescream.mp3" preload="auto"></audio>    
+}
+@if(Ghost.GetType() == typeof(Deogen))
+{
+    <audio id="deogen" src="Sounds/deogenbreath.mp3" preload="auto"></audio>    
+
 }
 
 <MudCard Style=@($"background-color: {GetCardColor()}; color: white; height: 256px; display: flex; flex-direction: column;")>
@@ -52,7 +60,7 @@
     <div Style="display: flex; flex-direction: column; flex: 1;">
         <MudCardHeader Style="height: fit-content;">
             <CardHeaderContent>
-                <MudText Typo="Typo.h6">@Ghost.Name</MudText>
+                <MudText Typo="Typo.h5">@Ghost.Name</MudText>
             </CardHeaderContent>
             <CardHeaderActions>
                 <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="@(() => State.ConfirmGhost(Ghost))" />
@@ -62,13 +70,19 @@
                         <MudTooltip Text="Play Banshee Scream">
                             <MudIconButton OnClick="@(async() => await PlayBansheeSound())" Icon="@Icons.Material.Filled.VolumeUp" Color="Color.Info" />
                         </MudTooltip>
-                    }
+                }
+                @if (Ghost.GetType() == typeof(Deogen))
+                {
+                    <MudTooltip Text="Play Deogen Breath">
+                        <MudIconButton OnClick="@(async() => await PlayDeogenSound())" Icon="@Icons.Material.Filled.VolumeUp" Color="Color.Info" />
+                    </MudTooltip>
+                }
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent Style="display: flex; flex: 1; overflow: hidden;">
             <!-- Left Half -->
             <div Style="flex: 1; padding: 0px 16px 0px 16px;">
-                <MudText Typo="Typo.h5">
+                <MudText Typo="Typo.h6">
                     Evidences
                 </MudText>
                 <MudCardActions>
@@ -111,33 +125,33 @@
                     @if (Ghost.Tells.Length > 0)
                     {
                         <h3>Tells</h3>
-                        @foreach (var ability in Ghost.Tells)
+                        @foreach (var ability in Ghost.Tells.OrderByDescending(i => i.Usefulness))
                         {
-                            <div>• @ability</div>
+                            <div style="@($"{(ability.Usefulness == Usefulness.Important ? "color: yellow;" : "")}")">• @ability</div>
                         }
                     }
                     @if (Ghost.RuleOuts.Length > 0)
                     {
                         <h3>Rule Outs</h3>
-                        @foreach (var ability in Ghost.RuleOuts)
+                        @foreach (var ability in Ghost.RuleOuts.OrderByDescending(i => i.Usefulness))
                         {
-                            <div>• @ability</div>
+                            <div style="@($"{(ability.Usefulness == Usefulness.Important ? "color: yellow;" : "")}")">• @ability</div>
                         }
                     }
                     @if (Ghost.ConfirmationTests.Length > 0)
                     {
                         <h3>Confirmation Tests</h3>
-                        @foreach (var ability in Ghost.ConfirmationTests)
+                        @foreach (var ability in Ghost.ConfirmationTests.OrderByDescending(i => i.Usefulness))
                         {
-                            <div>• @ability</div>
+                            <div style="@($"{(ability.Usefulness == Usefulness.Important ? "color: yellow;" : "")}")">• @ability</div>
                         }
                     }
                     @if (Ghost.Abilities.Length > 0)
                     {
                         <h3>Special Abilities</h3>
-                        @foreach (var ability in Ghost.Abilities)
+                        @foreach (var ability in Ghost.Abilities.OrderByDescending(i => i.Usefulness))
                         {
-                            <div>• @ability</div>
+                            <div style="@($"{(ability.Usefulness == Usefulness.Important ? "color: yellow;" : "")}")">• @ability</div>
                         }
                     }
                 </MudText>

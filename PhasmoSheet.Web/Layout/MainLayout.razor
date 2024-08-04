@@ -1,4 +1,5 @@
 ﻿@using PhasmoSheet.Core.Common
+@using PhasmoSheet.Core.Ghosts
 @inherits LayoutComponentBase
 @inject GlobalState state
 
@@ -13,7 +14,7 @@
 <MudSnackbarProvider />
 
 <div class="container">
-    <aside class="sidebar" style="border-right: 1px solid #ff0000 dashed;">
+    <aside class="sidebar" style="border-right: 1px dashed white ;">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 100%;" OnClick="@(() => state.Reset())">
             Reset
         </MudButton>
@@ -28,6 +29,7 @@
                            OnClick="@(() => state.ToggleEvidence(evidence))"
                            Color="@(state.GetEvidenceButtonColor(evidence))"
                            Class="icon-text-button"
+                           Disabled=@(!IsEnabled(evidence))
                 Style="width: 100%;">
                     <MudIcon Icon="@state.GetEvidenceIconButton(evidence)" />
                     <span class="icon-text">@Format.Evidence(evidence)</span>
@@ -72,7 +74,7 @@
     }
 
     .sidebar {
-        width: 200px;
+        width: 256px;
         color: #fff;
         padding: 10px;
         display: flex;
@@ -98,7 +100,7 @@
             }
 
     .content {
-        margin-left: 210px;
+        margin-left: 276px;
         padding: 20px;
         flex: 1;
     }
@@ -119,6 +121,8 @@
 @code {
     private bool evidenceCollapsed = false;
     private bool eventCollapsed = true;
+    private TheMimic mimic = new TheMimic();
+    private List<Ghost> allGhosts = Ghost.GetAll();
 
     protected override void OnInitialized()
     {
@@ -136,6 +140,35 @@
         eventCollapsed = !eventCollapsed;
         StateHasChanged();
     }
+
+    private bool IsEnabled(Evidence evidence)
+    {
+        var matchingGhosts = allGhosts.Where(g => state.ConfirmedEvidences.All(e => g.Evidences.Contains(e))).ToList();
+        bool containsThisEvidence = matchingGhosts.Any(g => g.Evidences.Contains(evidence));
+
+        if(!containsThisEvidence)
+        {
+            return false;
+        }
+
+        if (state.ConfirmedEvidences.Contains(evidence) || state.RuledOutEvidences.Contains(evidence))
+            return true;
+        if (containsThisEvidence && state.CanPickMoreEvidence)
+            return true;
+
+        bool matchingAllMimicEvidences = state.ConfirmedEvidences.All(e => mimic.Evidences.Contains(e));
+        bool containsMimicEvidence = mimic.Evidences.Contains(evidence);
+
+        if(!state.CanPickMoreEvidence)
+        {
+            if(evidence == Evidence.GhostOrb)
+            {
+                return matchingAllMimicEvidences;
+            }
+        }
+        return containsThisEvidence && state.ConfirmedEvidences.Contains(Evidence.GhostOrb);
+    }
+
 
     private Evidence[] evidences = new Evidence[]
     {

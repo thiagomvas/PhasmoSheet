@@ -14,6 +14,19 @@ namespace PhasmoSheet.Web
         private List<Ghost> correctGhosts = new();
         private List<Ghost> ruledOutGhosts = new();
 
+        private Difficulty _difficulty = Difficulty.Nightmare;
+
+        public bool CanPickMoreEvidence => ConfirmedEvidences.Count < GetMaxEvidencesForDifficulty();
+        public Difficulty Difficulty
+        {
+            get => _difficulty;
+            set
+            {
+                _difficulty = value;
+                OnPropertyChanged(nameof(Difficulty));
+            }
+        }
+
         public List<Ghost> CorrectGhosts
         {
             get => correctGhosts;
@@ -156,7 +169,7 @@ namespace PhasmoSheet.Web
             }
             else
             {
-                ConfirmedEvidences.Add(evidence);
+                    ConfirmedEvidences.Add(evidence);
             }
             OnPropertyChanged(nameof(ConfirmedEvidences));
             OnPropertyChanged(nameof(RuledOutEvidences));
@@ -174,6 +187,21 @@ namespace PhasmoSheet.Web
             OnPropertyChanged(nameof(ConfirmedEvents));
             OnPropertyChanged(nameof(CorrectGhosts));
             OnPropertyChanged(nameof(RuledOutGhosts));
+        }
+
+        public int GetMaxEvidencesForDifficulty()
+        {
+            return Difficulty switch
+            {
+                Difficulty.Amateur => 3,
+                Difficulty.Intermediate => 3,
+                Difficulty.Professional => 3,
+                Difficulty.Nightmare => 2,
+                Difficulty.Insanity => 1,
+                Difficulty.ApocalipseIII => 0,
+                Difficulty.Custom => 0,
+                _ => 3,
+            };
         }
     }
 }

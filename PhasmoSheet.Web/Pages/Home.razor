@@ -47,6 +47,10 @@
             .Where(g => !State.RuledOutEvidences.Any() || !State.RuledOutEvidences.Any(e => g.Evidences.Contains(e)))
             .ToList();
 
+            // Check if filtered ghosts have more than N evidences matching
+            filtered = filtered.Where(g => g.Evidences.Length == 4 || g.Evidences.Count(e => State.ConfirmedEvidences.Contains(e)) <= State.GetMaxEvidencesForDifficulty()).ToList();
+
+
         if(State.ConfirmedEvents.Any())
         {
             // If any of the ghosts has a rule out event confirmed, remove them
