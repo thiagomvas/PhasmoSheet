@@ -7,7 +7,7 @@ namespace PhasmoSheet.Core.Ghosts
         public Yurei()
         {
             Name = "Yurei";
-            Evidences = [];
+            Evidences = [Evidence.GhostOrbs, Evidence.FreezingTemperatures, Evidence.DOTSProjector];
             GuaranteedEvidence = null;
             MinSanityPercentage = 50;
             ConditionalSanityPercentages = [];
