@@ -1,5 +1,4 @@
 ﻿using PhasmoSheet.Core.Common;
-using System.Xml.Linq;
 
 namespace PhasmoSheet.Core.Ghosts
 {

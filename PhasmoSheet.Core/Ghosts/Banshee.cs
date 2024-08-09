@@ -20,7 +20,7 @@ namespace PhasmoSheet.Core.Ghosts
             ConfirmationTests = [
                 new("Listen to the ghost using the Parabolic Microphone. If the ghost has the unique screams, it is a Banshee", Usefulness.Important)
                 ];
-            
+
             Abilities =
             [
                 "Roams towards target without leaving EMF",

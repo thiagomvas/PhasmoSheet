@@ -54,7 +54,7 @@ namespace PhasmoSheet.Core.Ghosts
             var result = "";
             if (ConditionalFootstepSpeed.Length > 0)
                 result += " | ";
-            foreach(var speed in ConditionalFootstepSpeed)
+            foreach (var speed in ConditionalFootstepSpeed)
             {
                 result += $"{speed} m/s, ";
             }

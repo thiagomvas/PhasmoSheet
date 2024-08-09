@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using MudBlazor;
+﻿using MudBlazor;
 using PhasmoSheet.Core.Common;
 using PhasmoSheet.Core.Ghosts;
+using System.ComponentModel;
 
 namespace PhasmoSheet.Web
 {
@@ -169,7 +168,7 @@ namespace PhasmoSheet.Web
             }
             else
             {
-                    ConfirmedEvidences.Add(evidence);
+                ConfirmedEvidences.Add(evidence);
             }
             OnPropertyChanged(nameof(ConfirmedEvidences));
             OnPropertyChanged(nameof(RuledOutEvidences));
